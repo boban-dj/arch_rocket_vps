@@ -1,0 +1,281 @@
+#!/bin/bash
+
+if [ $# -ne 2 ]
+then
+	echo "#######################################################################"
+	echo "#                                                                     #"
+	echo -e "# USAGE: ialis \e[00;31m<Install Device> <Hostname> \e[00m                           #"
+	echo -e "# \e[00;31mInstall Device\e[00m = /dev/sda or /dev/sdb etc. etc.                     #"
+	echo -e "# \e[00;31mHostname\e[00m = The hostname you want for this install.                  #"
+	echo "# Edit the location,keymap and language in this script before running #"
+	echo "#                                                                     #"
+	echo -e "# Use \e[00;31mwifi-menu\e[00m or \e[00;31mdhcpcd\e[00m to setup the network before running this.   #"
+	echo "#                                                                     #"
+	echo -e "# This ialis version is dated \e[00;31mThu 8 Aug 2013 16:28:15 BST\e[00m             #"
+	echo "#######################################################################"
+	exit 2
+fi
+
+IDEV=$1
+
+############### CHANGE THESE SETTINGS TO SUIT YOUR LOCATION #################
+TIMEZONE="Europe/Amsterdam"
+LOCALEGEN="en_US.UTF-8 UTF-8"
+KEYMAP="us"
+FONT=""
+FONTMAP=""
+LANG="en_US.UTF-8"
+LCCOLLATE="C"
+#############################################################################
+
+# Make sure the device actually exists
+if [[ ! -b $IDEV ]]; then
+	echo "Device $IDEV does not exist.... bailing out."
+	exit 3
+fi
+
+echo
+echo -e "Partitions will be... \e[00;31m"$IDEV"1=/boot  "$IDEV"2=/  "$IDEV"3=home\e[00m (without swap)"
+echo -e "Partitions will be... \e[00;31m"$IDEV"1=/boot  "$IDEV"3=/  "$IDEV"4=home\e[00m (with swap)"
+echo "You need to be able to change this script to suit your own needs."
+echo "Consider learning about the install by studying this script."
+echo
+echo -e "You can press \e[00;31mCtrl+C\e[00m at any of the following prompts to exit this script."
+echo
+
+read -n1 -s -p "Partition the $IDEV HDD (y/N)" a
+echo
+
+if [[ $a == "Y" || $a == "y" ]]; then
+	parted -s $IDEV mklabel msdos
+	read -p "Enter size of the /boot partition in MB and press <Enter> " bs
+	parted -s $IDEV mkpart primary ext2 1 $bs
+	echo
+	hasswap="no"
+	read -n1 -s -p "Do you need a swap partition (y/N) " a
+	echo
+	ss=0
+	if [[ $a == "Y" || $a == "y" ]]; then
+		read -p "Enter size of the swap partition in MB and press <Enter> " ss
+		sp=$(($bs+$ss))
+		parted -s $IDEV mkpart primary linux-swap $bs $sp
+		echo
+		hasswap="y"
+	fi
+	read -p "Enter size of the / (root) partition in GB and press <Enter> " rs
+	bs=$(($ss+$bs))
+	rs=$(($rs*1000+$ss+$bs))
+	parted -s $IDEV mkpart primary ext2 $bs $rs
+	echo
+	echo "Enter size of the /home partition in GB and press <Enter>"
+	read -p "You can enter 100% to use the remainder of the HDD " hs
+	if [[ $hs == "100%" ]]; then
+		parted -s $IDEV mkpart primary ext2 $rs 100%
+	else
+		hs=$(($hs*1000+$rs))
+		parted -s $IDEV mkpart primary ext2 $rs $hs
+	fi
+	parted -s $IDEV set 1 boot on
+else
+	hasswap="n"
+	read -n1 -s -p "Do you have a swap partition (y/N) " a
+	if [[ $a == "Y" || $a == "y" ]]; then
+		hasswap="y"
+	fi
+	if [[ $hasswap == "y" ]]; then
+		echo -e "Your partitions must be like this...\n \e[00;31m"$IDEV"1=/boot  "$IDEV"2=swap  "$IDEV"3=/  "$IDEV"4=home\e[00m"
+	else
+		echo -e "Your partitions must be like this...\n \e[00;31m"$IDEV"1=/boot  "$IDEV"2=/  "$IDEV"3=home\e[00m"
+	fi
+	echo
+	echo
+	echo -e "\e[00;31mIf your partitions are not as shown then DO NOT CONTINUE.\e[00m"
+	echo
+	echo
+fi
+read -n1 -s -p "Format /boot partition (y/N)" a
+if [[ $a == "Y" || $a == "y" ]]; then
+	mkfs -t ext2 "$IDEV"1
+fi
+# If hasswap = "y" then need to mkswap here
+if [[ $hasswap == "y" ]]; then
+	mkswap "$IDEV"2
+fi
+read -n1 -s -p "Format / (root) partition (y/N)" a
+if [[ $a == "Y" || $a == "y" ]]; then
+	if [[ $hasswap == "y" ]]; then
+		mkfs -t ext4 "$IDEV"3
+	else
+		mkfs -t ext4 "$IDEV"2
+	fi
+fi
+read -n1 -s -p "Format /home partition (y/N)" a
+if [[ $a == "Y" || $a == "y" ]]; then
+	if [[ $hasswap == "y" ]]; then
+		mkfs -t ext4 "$IDEV"4
+	else
+		mkfs -t ext4 "$IDEV"3
+	fi
+fi
+
+if [[ $hasswap == "y" ]]; then
+	mount "$IDEV"3 /mnt
+else
+	mount "$IDEV"2 /mnt
+fi
+
+mkdir /mnt/home
+mkdir /mnt/boot
+
+mount "$IDEV"1 /mnt/boot
+
+if [[ $hasswap == "y" ]]; then
+	mount "$IDEV"4 /mnt/home
+else
+	mount "$IDEV"3 /mnt/home
+fi
+
+#pacstrap /mnt base base-devel syslinux systemd systemd-arch-units wget
+pacstrap /mnt base base-devel syslinux wget dialog wpa_supplicant git
+
+genfstab -p /mnt >> /mnt/etc/fstab
+
+cat > /mnt/root/ialis2 << "EOF"
+#!/bin/bash
+
+ln -s /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
+
+echo -e "hOsTnAmE" > /etc/hostname
+echo -e "vCoNsOle" > /etc/vconsole.conf
+echo -e "lOcAlE" > /etc/locale.conf
+echo -e "LoCaLeGeN" > /etc/locale.gen
+echo -e "tImEzOnE" > /etc/timezone
+
+# Systemd
+# Create a couple of ttys that I find can be useful, X will be on tty4
+# Due to the way systemd is working here I have noticed the X display is coming up on tty1 !!!!!!!!!
+ln -sf /usr/lib/systemd/system/getty@.service /etc/systemd/system/getty.target.wants/getty@tty2.service
+ln -sf /usr/lib/systemd/system/getty@.service /etc/systemd/system/getty.target.wants/getty@tty3.service
+
+locale-gen
+
+mkinitcpio -p linux
+
+mkdir /media
+
+# I have occasionally received a "Missing Operating System" message on reboot.
+# Because of this I added the command 'extlinux -i /boot/syslinux'
+# This solved the problem initially but I still very occasionally get the message.
+# Each time it has happend I reboot the live CD, remount the partitions and
+# run the extlinux -i /boot/syslinux command again and it solves the problem.
+# Not sure of the reason for this but I have added a couple of sleep commands to
+# see if it helps at all.
+/usr/sbin/syslinux-install_update -iam
+sleep 1
+extlinux -i /boot/syslinux
+sleep 1
+passwd root
+
+# Uncomment the multilib repo if it exists (x86_64 only but harmless in i686)
+sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf
+sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf
+sed -i 's/#\[multilib\]/\[multilib\]/g' /etc/pacman.conf
+
+cat > /boot/syslinux/syslinux.cfg << "EOFF"
+# Config file for Syslinux -
+# /boot/syslinux/syslinux.cfg
+DEFAULT arch
+PROMPT 0        # Set to 1 if you always want to display the boot: prompt
+TIMEOUT 10
+
+# Menu Configuration
+# Either menu.c32 or vesamenu32.c32 must be copied to /boot/syslinux
+UI menu.c32
+#UI vesamenu.c32
+
+# Refer to http://syslinux.zytor.com/wiki/index.php/Doc/menu
+MENU TITLE Arch Linux
+#MENU BACKGROUND splash.png
+MENU COLOR border       30;44   #40ffffff #a0000000 std
+MENU COLOR title        1;36;44 #9033ccff #a0000000 std
+MENU COLOR sel          7;37;40 #e0ffffff #20ffffff all
+MENU COLOR unsel        37;44   #50ffffff #a0000000 std
+MENU COLOR help         37;40   #c0ffffff #a0000000 std
+MENU COLOR timeout_msg  37;40   #80ffffff #00000000 std
+MENU COLOR timeout      1;37;40 #c0ffffff #00000000 std
+MENU COLOR msg07        37;40   #90ffffff #a0000000 std
+MENU COLOR tabmsg       31;40   #30ffffff #00000000 std
+
+# boot sections follow
+# TIP: If you want a 1024x768 framebuffer, add "vga=773" to your kernel line.
+
+LABEL arch
+	MENU LABEL Arch Linux on /dev/sdx2
+	LINUX ../vmlinuz-linux
+	APPEND root=/dev/sdx2 ipv6.disable=1 ro
+	INITRD ../initramfs-linux.img
+
+LABEL archfallback
+	MENU LABEL Arch Linux Fallback on /dev/sdx2
+	LINUX ../vmlinuz-linux
+	APPEND root=/dev/sdx2 ro
+	INITRD ../initramfs-linux-fallback.img
+
+#LABEL windows
+#        MENU LABEL Windows
+#        COM32 chain.c32
+#        APPEND hd0 1
+
+LABEL hdt
+        MENU LABEL HDT (Hardware Detection Tool)
+        COM32 hdt.c32
+
+LABEL reboot
+        MENU LABEL Reboot
+        COM32 reboot.c32
+
+LABEL off
+        MENU LABEL Power Off
+        COMBOOT poweroff.com
+EOFF
+
+echo
+echo
+echo
+echo -e "Do... \e[00;31mextlinux -i /boot/syslinux\e[00m and press <Enter>"
+echo
+echo -e "Now type \e[00;31mexit\e[00m and press\e[00;31m <Enter>\e[00m."
+EOF
+
+# This will set the / partition into the syslinux.cfg that ialis2 will write
+sed -i "s/hOsTnAmE/$2/g" /mnt/root/ialis2
+sed -i "s/vCoNsOle/KEYMAP=$KEYMAP\\\n/g" /mnt/root/ialis2
+sed -i "s/lOcAlE/LANG=$LANG\\\nLC_COLLATE=$LCCOLLATE\\\n/g" /mnt/root/ialis2
+sed -i "s/LoCaLeGeN/$LOCALEGEN\\\n/g" /mnt/root/ialis2
+TIMEZONE=$(printf "%s\n" "$TIMEZONE" | sed 's/[][\.*^$/]/\\&/g')
+sed -i "s/tImEzOnE/$TIMEZONE\\\n/g" /mnt/root/ialis2
+
+# If there is a swap partition then change sda2 to sda3 in syslinux.cfg that is in ialis2
+TMP="\/dev\/sdx"
+NIDEV=$(printf "%s\n" "$IDEV" | sed 's/[][\.*^$/]/\\&/g')
+if [[ $hasswap == "y" ]]; then
+	sed -i "s/${TMP}2/${NIDEV}3/g" /mnt/root/ialis2
+else
+	sed -i "s/${TMP}/${NIDEV}/g" /mnt/root/ialis2
+fi
+
+# Make ialis2 executable
+chmod +x /mnt/root/ialis2
+
+echo -e "Now go to the root directory with \e[00;31mcd /root\e[00m"
+echo -e "Then run ialis2 with \e[00;31m./ialis2\e[00m"
+
+# Once we run the chroot this script just waits until exit from chroot
+arch-chroot /mnt
+
+# Unmount the new OS
+umount /mnt/boot
+umount /mnt/home
+umount /mnt
+echo -e "When you have logged in to your new install remember to edit mirrorlist."
+echo -e "Now shutdown with \e[00;31mshutdown -h now\e[00m or reboot with \e[00;31mreboot\e[00m then remove the liveCD and restart."
