@@ -3657,7 +3657,7 @@ install_web_server(){
   read_input $WEBSERVER
   case "$OPTION" in
     1)
-      package_install "apache php php-apache php-mcrypt php-gd"
+      package_install "apache php php-apache php-apcu php-cgi php-embed php-enchant php-gd php-fpm php-intl php-ldap php-mcrypt php-mssql php-odbc php-pear php-pgsql php-snmp php-tidy php-xcache php-xsl php-docs"
       install_mariadb
       install_adminer
       system_ctl enable httpd
