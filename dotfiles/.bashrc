@@ -289,7 +289,7 @@ fi
 #elif which emacs &>/dev/null; then
 #  export EDITOR="emacs -nw"
 #else
-  export EDITOR="emacs"
+  export EDITOR="nano"
 #fi
 
 
