@@ -46,8 +46,6 @@ alias yt_uploader="youtube-dl --write-description --write-thumbnail -o '%(upload
 
 ################################################################################
 # SSH
-## ssh connect with boya-creations.nl
-alias boya='ssh -p 4000 boyacr1q@boya-creations.nl'
 
 ################################################################################
 # FILESYSTEM
