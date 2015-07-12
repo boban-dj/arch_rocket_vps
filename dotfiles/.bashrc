@@ -1,11 +1,11 @@
 ###################################################################
-##                         boya-creations                        ##
+##                         		                         ##
 ##                                                               ##
-##                   Copyright (C) 2014 Boban_dj		 		 ##
+##                   	      boban-dj				 ##
 ##                      Use at your own risk!                    ##
 ##                                                               ##
 ##  This software released under the GNU General Public License. ##
-##																 ##	
+##								 ##	
 ###################################################################
 
 
