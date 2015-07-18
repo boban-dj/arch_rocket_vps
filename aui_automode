@@ -42,7 +42,7 @@
   NFS="n"
   READAHEAD="n"
   SAMBA="n"
-  SSH="y"
+  SSH="n"
   TLP="n"                # Laptop Power Manager
   ZRAM="n"
   PROPRIETARY_DRIVER="n" # Proprietary (NVIDIA|ATI) driver
