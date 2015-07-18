@@ -9,10 +9,6 @@
 ###################################################################
 
 
-# solution for stdin: is not a tty?? NO
-#[ -z "$PS1" ] && return
-
-
 ################################################################################
 # APACHE MYSQLD
 ##apache and mysql start,stop restart
@@ -63,7 +59,7 @@ if $_isxrunning; then
 
 export TERM='xterm-256color'
 
-#user is green	
+# user prompt is green	
 	B='\[\e[1;38;5;33m\]'
 	LB='\[\e[1;38;5;81m\]'
 	GY='\[\e[1;32;5;242m\]'
@@ -74,7 +70,7 @@ export TERM='xterm-256color'
 	Y='\[\e[1;32;5;214m\]'
 	W='\[\e[0m\]'
 
-# root is red
+# root prompt is red
 #GY='\[\e[1;31;5;242m\]'
 #P='\[\e[1;31;5;161m\]'
 #Y='\[\e[1;31;5;214m\]'
@@ -83,10 +79,6 @@ export TERM='xterm-256color'
 get_prompt_symbol() {
   [[ $UID == 0 ]] && echo "#" || echo "\$"
 }
-
-## pwd issue, i just added $PWD for showing working directory 
-
-# export PS1="$GY[$Y\u$GY@$P\h$GY:$B\$PWD\$LB]\$(get_prompt_symbol) "
 
 export PS1="$GY[$Y\u$GY@$P\h$GY:$B\W$LB]\$PWD\$(get_prompt_symbol) "
 else
