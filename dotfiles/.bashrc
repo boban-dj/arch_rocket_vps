@@ -43,13 +43,15 @@ alias vps='ssh -p 22 user@your.server.ip.address'
 #PS1='\[\e[1;96m\]\u@\[\e[m\]\[\e[1;93m\]\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
 #PS1="\[$On_Blue\]\[$BIYellow\][ssh]\[$Off\]\[$BICyan\] \u@\[\e[m\]\[\e[1;93m\]\H\[\e[m\]\[\e[1;34m\] \w\[\e[1;32m\] \$\[\e[m\]\[\e[1;37m\] "
 
-# PS1 Final
+# PS1 Final; remove [ssh] if you use .bashrc for normal desktop
 if [ $(id -u) -eq 0 ];
 then
-	PS1='\[\e[1;91m\]\u@\[\e[m\]\[\e[1;91m\]\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;31m\]\$\[\e[m\] \[\e[1;37m\]'
+	PS1='\[\e[1;91m\]\u@\[\e[m\]\[\e[1;93m\]\H[ssh]\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;31m\]\$\[\e[m\] \[\e[1;37m\]'
 else
-	PS1='\[\e[1;92m\]\u@\[\e[m\]\[\e[1;92m\]\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
+	PS1='\[\e[1;92m\]\u@\[\e[m\]\[\e[1;93m\]\H[ssh]\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
 fi
+
+
 
 
 # Reset
