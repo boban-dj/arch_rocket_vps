@@ -1,23 +1,137 @@
 ###################################################################
-##                         		                         ##
+##                         boban_dj                              ##
 ##                                                               ##
-##                   	      boban-dj				 ##
 ##                      Use at your own risk!                    ##
 ##                                                               ##
-##  This software released under the GNU General Public License. ##
-##								 ##	
 ###################################################################
 
 
+
+
+
+
+
 ################################################################################
-# APACHE MYSQLD
-##apache and mysql start,stop restart
+# GITHUB
+
+gclone ()
+{
+	git clone https://github.com/boban-dj/$1
+}
+
+gcomm ()
+{
+	git commit -a -m "$1"
+}
+
+gpush ()
+{
+	git push origin master
+}
+
+
+################################################################################
+alias vps='ssh -p 22 user@your.server.ip.address'
+
+
+################################################################################
+# Test for correct prompt colors; Normal '\[  \]' ;Escape with " " when using $Color "\[$Color\]" 
+#PS1='\[\e[1;33m\][\u @ \@ \w]\$ \[\e[0;32m\]'
+#PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
+#PS1='\[\e[1;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
+#PS1='\[\e[1;95m\]\u@\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
+#PS1='\[\e[1;96m\]\u@\[\e[m\]\[\e[1;93m\]\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
+#PS1="\[$On_Blue\]\[$BIYellow\][ssh]\[$Off\]\[$BICyan\] \u@\[\e[m\]\[\e[1;93m\]\H\[\e[m\]\[\e[1;34m\] \w\[\e[1;32m\] \$\[\e[m\]\[\e[1;37m\] "
+
+# PS1 Final
+if [ $(id -u) -eq 0 ];
+then
+	PS1='\[\e[1;91m\]\u@\[\e[m\]\[\e[1;91m\]\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;31m\]\$\[\e[m\] \[\e[1;37m\]'
+else
+	PS1='\[\e[1;92m\]\u@\[\e[m\]\[\e[1;92m\]\H\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
+fi
+
+
+# Reset
+Off='\e[0m'       # Text Reset
+
+# Regular Colors
+Black='\e[0;30m'        # Black
+Red='\e[0;31m'          # Red
+Green='\e[0;32m'        # Green
+Yellow='\e[0;33m'       # Yellow
+Blue='\e[0;34m'         # Blue
+Purple='\e[0;35m'       # Purple
+Cyan='\e[0;36m'         # Cyan
+White='\e[0;37m'        # White
+
+# Bold
+BBlack='\e[1;30m'       # Black
+BRed='\e[1;31m'         # Red
+BGreen='\e[1;32m'       # Green
+BYellow='\e[1;33m'      # Yellow
+BBlue='\e[1;34m'        # Blue
+BPurple='\e[1;35m'      # Purple
+BCyan='\e[1;36m'        # Cyan
+BWhite='\e[1;37m'       # White
+
+# Underline
+UBlack='\e[4;30m'       # Black
+URed='\e[4;31m'         # Red
+UGreen='\e[4;32m'       # Green
+UYellow='\e[4;33m'      # Yellow
+UBlue='\e[4;34m'        # Blue
+UPurple='\e[4;35m'      # Purple
+UCyan='\e[4;36m'        # Cyan
+UWhite='\e[4;37m'       # White
+
+# Background
+On_Black='\e[40m'       # Black
+On_Red='\e[41m'         # Red
+On_Green='\e[42m'       # Green
+On_Yellow='\e[43m'      # Yellow
+On_Blue='\e[44m'        # Blue
+On_Purple='\e[45m'      # Purple
+On_Cyan='\e[46m'        # Cyan
+On_White='\e[47m'       # White
+
+# High Intensity
+IBlack='\e[0;90m'       # Black
+IRed='\e[0;91m'         # Red
+IGreen='\e[0;92m'       # Green
+IYellow='\e[0;93m'      # Yellow
+IBlue='\e[0;94m'        # Blue
+IPurple='\e[0;95m'      # Purple
+ICyan='\e[0;96m'        # Cyan
+IWhite='\e[0;97m'       # White
+
+# Bold High Intensity
+BIBlack='\e[1;90m'      # Black
+BIRed='\e[1;91m'        # Red
+BIGreen='\e[1;92m'      # Green
+BIYellow='\e[1;93m'     # Yellow
+BIBlue='\e[1;94m'       # Blue
+BIPurple='\e[1;95m'     # Purple
+BICyan='\e[1;96m'       # Cyan
+BIWhite='\e[1;97m'      # White
+
+# High Intensity backgrounds
+On_IBlack='\e[0;100m'   # Black
+On_IRed='\e[0;101m'     # Red
+On_IGreen='\e[0;102m'   # Green
+On_IYellow='\e[0;103m'  # Yellow
+On_IBlue='\e[0;104m'    # Blue
+On_IPurple='\e[0;105m'  # Purple
+On_ICyan='\e[0;106m'    # Cyan
+On_IWhite='\e[0;107m'   # White
+
+
+################################################################################
+# APACHE
+## apache and mysql start,stop restart
 alias on='sudo systemctl start httpd;sudo systemctl start mysqld;'
 alias off='sudo systemctl stop httpd;sudo systemctl stop mysqld;'
 alias both='sudo systemctl restart httpd;sudo systemctl restart mysqld;'
-
-## carry over aliases in root .bashrc
-alias sudo='sudo '
 
 
 
@@ -25,65 +139,57 @@ alias sudo='sudo '
 # FILESYSTEM
 ## see permissions in numbers
 alias lso="ls -alG | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(\" %0o \",k);print}'"
-
+##alias misc, requires argument
+alias hist='history | grep'
 ##alias folders-files
 alias lsdirs="ls -d -1 $PWD/**"
 alias lsfiles="ls -d -1 $PWD/*.*"
-
 ##current dirsize,sort by size low-high, show total
-alias dirsort='du -cha --max-depth=1  | sort -h'
+alias size='sudo du -cha --max-depth=1  | sort -h'
 
 
 ################################################################################
-## OVERALL CONDITIONALS 
-_islinux=false
-[[ "$(uname -s)" =~ Linux|GNU|GNU/* ]] && _islinux=true
-
-_isarch=false
-[[ -f /etc/arch-release ]] && _isarch=true
-
-_isxrunning=false
-[[ -n "$DISPLAY" ]] && _isxrunning=true
-
-_isroot=false
-[[ $UID -eq 0 ]] && _isroot=true
-
-
+# OTHERS
+## calibrate Wacom Cintiq
+alias calibrate='xsetwacom --set "8" MaptoOutput 1600x1200+1680+0'
 
 ################################################################################
-## PS1 CONFIG
-[[ -f $HOME/.dircolors ]] && eval $(dircolors -b $HOME/.dircolors)
-if $_isxrunning; then
+# SCRIPTS
+#Pandoc installer cabal haskell
+export PATH=/home/boban/.cabal/bin:$PATH
 
-[[ -f $HOME/.dircolors_256 ]] && eval $(dircolors -b $HOME/.dircolors_256)
+#My Perl scripts
+export gouda="/home/boban/Scripts/gouda.pl"
+export PATH=$PATH:$gouda
 
-export TERM='xterm-256color'
+#My sync doc script
+export syncdocs=/home/boban/Scripts/sync.sh
+export PATH=$PATH:$syncdocs
 
-# user prompt is green	
-	B='\[\e[1;38;5;33m\]'
-	LB='\[\e[1;38;5;81m\]'
-	GY='\[\e[1;32;5;242m\]'
-	G='\[\e[1;38;5;82m\]'
-	P='\[\e[1;32;5;161m\]'
-	PP='\[\e[1;38;5;93m\]'
-	R='\[\e[1;38;5;196m\]'
-	Y='\[\e[1;32;5;214m\]'
-	W='\[\e[0m\]'
+export bsync=/home/boban/Scripts/bsync.py
+export PATH=$PATH:$bsync
 
-# root prompt is red
-#GY='\[\e[1;31;5;242m\]'
-#P='\[\e[1;31;5;161m\]'
-#Y='\[\e[1;31;5;214m\]'
+# Zenity test for colorpicker
+export color=/home/boban/Scripts/color_dialog.sh
+export PATH=$PATH:$color
 
+# Test for not installed packages to run from /usr/local/bin
+export PATH=$PATH:/usr/local/bin/SpriterR4_64
 
-get_prompt_symbol() {
-  [[ $UID == 0 ]] && echo "#" || echo "\$"
-}
+# Gem executables: keydown (see https://github.com/infews/keydown )
+# See arch wiki: https://wiki.archlinux.org/index.php/Ruby#Bundler
+PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
 
-export PS1="$GY[$Y\u$GY@$P\h$GY:$B\W$LB]\$PWD\$(get_prompt_symbol) "
-else
-export TERM='xterm-color'
+# for install python-virtualenv
+export WORKON_HOME=${HOME}/Snakepit
+if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
+	source /usr/local/bin/virtualenvwrapper.sh
+elif [ -f /usr/bin/virtualenvwrapper.sh ]; then
+	source /usr/bin/virtualenvwrapper.sh
 fi
+
+
+
 
 ################################################################################
 ## MODIFIED COMMANDS 
@@ -119,7 +225,6 @@ shopt -s extglob                 # Extended pattern
 shopt -s no_empty_cmd_completion # No empty completion
 
 
-
 ################################################################################
 ## HISTORY CONTROL BOB  
 export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
@@ -130,7 +235,6 @@ export HISTIGNORE='&:ls:ll:la:cd:exit:clear:history'
 # shopt -s histappend                      # append to history, don't overwrite it(already done line172)
 # Save and reload the history after each command finishes
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
-
 
 
 ################################################################################
@@ -144,33 +248,91 @@ fi
 ################################################################################
 ## EXPORTS 
 export PATH=/usr/local/bin:$PATH
+export _JAVA_OPTIONS='-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
 
-################################################################################
-## EDITOR 
-#if which vim &>/dev/null; then
-#  export EDITOR="vim"
-#elif which emacs &>/dev/null; then
-#  export EDITOR="emacs -nw"
-#else
-  export EDITOR="nano"
-#fi
 
 
 
 ################################################################################
-## PRIVILEGED ACCESS 
-if ! $_isroot; then
-  alias sudo='sudo '
-  alias scat='sudo cat'
-  alias svim='sudo vim'
-  alias root='sudo su'
-  alias reboot='sudo reboot'
-  alias halt='sudo halt'
+#Ruby support
+if which ruby &>/dev/null; then
+	GEM_DIR=$(ruby -rubygems -e 'puts Gem.user_dir')/bin
+	if [[ -d "$GEM_DIR" ]]; then
+	  export PATH=$GEM_DIR:$PATH
+	fi
+	fi
+	if which google-chrome-stable &>/dev/null; then
+	export CHROME_BIN=/usr/bin/google-chrome-stable
 fi
 
 
 ################################################################################
-# PACMAN ALIASES archlinux
+## EDITOR 
+
+export EDITOR=nano
+
+
+
+
+################################################################################
+# MEDIA
+## ffmpeg screenrec screendec
+alias screenrec='ffmpeg -f alsa -ac 2 -i pulse -f x11grab -r 30 -s 1024x768 -i :0.0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -crf 0 -threads 0 output.mkv'
+alias screendec='ffmpeg -i output.mkv -acodec libvorbis -ab 128k -ac 2 -vcodec libx264 -preset slow -crf 22 -threads 0 our-final-product.mp4'
+
+## ffmpeg screendecoding better code?
+screendecf ()
+	{
+	ffmpeg -i "$1" -acodec libvorbis -ab 128k -ac 2 -vcodec libx264 -preset slow -crf 22 -threads 0 our-final-product.mp4
+	echo "successfully converted to file"
+	}
+
+
+## youtube-dl
+alias yt_title="youtube-dl --write-description --write-thumbnail -o '%(title)s/%(title)s-%(id)s.%(ext)s'"
+alias yt_uploader="youtube-dl --write-description --write-thumbnail -o '%(uploader)s/%(title)s-%(id)s.%(ext)s'"
+
+
+
+################################################################################
+## SCREENSHOT with maim and slop 
+## <https://github.com/naelstrof/maim>
+alias shot2='maim -s -c 1,0,0,0.6 -p 10 ~/Pictures/Screenshot/$(date +%F-%T).png'
+
+
+## SHOT - TAKES A SCREENSHOT OF YOUR CURRENT WINDOW
+shot ()
+{
+import -frame -strip -quality 75 "$HOME/Pictures/Screenshot/$(date +%s).png"
+}
+
+
+## screenshot with convert imagemagick
+alias shotim='import -window root my1.png'
+
+
+
+
+
+################################################################################
+# COLORED MANUAL PAGES 
+## @see http://www.tuxarena.com/?p=508
+## For colourful man pages (CLUG-Wiki style)
+if $_isxrunning; then
+  export PAGER=less
+  export LESS_TERMCAP_mb=$'\E[01;31m'       # begin blinking
+  export LESS_TERMCAP_md=$'\E[01;38;5;74m'  # begin bold
+  export LESS_TERMCAP_me=$'\E[0m'           # end mode
+  export LESS_TERMCAP_se=$'\E[0m'           # end standout-mode
+  export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
+  export LESS_TERMCAP_ue=$'\E[0m'           # end underline
+  export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
+fi
+
+
+
+################################################################################
+## PACMAN ALIASES archlinux
 if $_isarch; then
   # we're not root
   if ! $_isroot; then
@@ -190,6 +352,8 @@ if $_isarch; then
   alias pacclean="pacman -Sc"           # Delete all not currently installed package files
   alias pacmake="makepkg -fcsi"         # Make package from PKGBUILD file in current directory
 fi
+
+
 
 
 ################################################################################
@@ -299,28 +463,228 @@ compress() {
 }
 
 
+################################################################################
+## CONVERT TO ISO
+to_iso () {
+  if [[ $# == 0 || $1 == "--help" || $1 == "-h" ]]; then
+	echo -e "Converts raw, bin, cue, ccd, img, mdf, nrg cd/dvd image files to ISO image file.\nUsage: to_iso file1 file2..."
+  fi
+  for i in $*; do
+	if [[ ! -f "$i" ]]; then
+	  echo "'$i' is not a valid file; jumping it"
+	else
+	  echo -n "converting $i..."
+	  OUT=`echo $i | cut -d '.' -f 1`
+	  case $i in
+			*.raw ) bchunk -v $i $OUT.iso;; #raw=bin #*.cue #*.bin
+	  *.bin|*.cue ) bin2iso $i $OUT.iso;;
+	  *.ccd|*.img ) ccd2iso $i $OUT.iso;; #Clone CD images
+			*.mdf ) mdf2iso $i $OUT.iso;; #Alcohol images
+			*.nrg ) nrg2iso $i $OUT.iso;; #nero images
+				* ) echo "to_iso don't know de extension of '$i'";;
+	  esac
+	  if [[ $? != 0 ]]; then
+		echo -e "${R}ERROR!${W}"
+	  else
+		echo -e "${G}done!${W}"
+	  fi
+	fi
+  done
+}
+
+
 
 
 ################################################################################
-## SYSTEMD SUPPORT 
-if which systemctl &>/dev/null; then
-  start() {
-	sudo systemctl start $1.service
-  }
-  restart() {
-	sudo systemctl restart $1.service
-  }
-  stop() {
-	sudo systemctl stop $1.service
-  }
-  enable() {
-	sudo systemctl enable $1.service
-  }
-  status() {
-	sudo systemctl status $1.service
-  }
-  disable() {
-	sudo systemctl disable $1.service
-  }
+# FILE & STRINGS RELATED FUNCTIONS 
+## Find a file with a pattern in name 
+ff() { find . -type f -iname '*'$*'*' -ls ; }
+
+## Find a file with pattern $1 in name and Execute $2 on it 
+fe() { find . -type f -iname '*'$1'*' -exec "${2:-file}" {} \;  ; }
+
+## Move filenames to lowercase 
+lowercase() {
+	for file ; do
+	  filename=${file##*/}
+	  case "$filename" in
+	  */* ) dirname==${file%/*} ;;
+		* ) dirname=.;;
+	  esac
+	  nf=$(echo $filename | tr A-Z a-z)
+	  newname="${dirname}/${nf}"
+	  if [[ "$nf" != "$filename" ]]; then
+		mv "$file" "$newname"
+		echo "lowercase: $file --> $newname"
+	  else
+		echo "lowercase: $file not changed."
+	  fi
+	done
+}
+
+
+
+### Finds directory sizes and lists them for the current directory 
+dirsize () {
+	du -shx * .[a-zA-Z0-9_]* 2> /dev/null | egrep '^ *[0-9.]*[MG]' | sort -n > /tmp/list
+	egrep '^ *[0-9.]*M' /tmp/list
+	egrep '^ *[0-9.]*G' /tmp/list
+	rm -rf /tmp/list
+}
+
+
+
+
+
+### DOTFILE_EXTRAS TOC##############
+
+
+
+# netinfo
+# screenshots
+# extract_simple
+# colored man pages
+# function aa_mod_parameters
+# function show_mod_parameter_info
+# screenfetch
+#################################
+
+
+
+
+
+################################################################################
+## NETINFO - SHOWS NETWORK INFORMATION FOR YOUR SYSTEM
+netinfo ()
+{
+echo "--------------- Network Information ---------------"
+/sbin/ifconfig | awk /'inet addr/ {print $2}'
+/sbin/ifconfig | awk /'Bcast/ {print $3}'
+/sbin/ifconfig | awk /'inet addr/ {print $4}'
+/sbin/ifconfig | awk /'HWaddr/ {print $4,$5}'
+myip=`lynx -dump -hiddenlinks=ignore -nolist http://checkip.dyndns.org:8245/ | sed '/^$/d; s/^[ ]*//g; s/[ ]*$//g' `
+echo "${myip}"
+echo "---------------------------------------------------"
+}
+
+
+
+################################################################################
+## EXTRACT - EXTRACT MOST COMMON COMPRESSION TYPES
+extract_simple () {
+if [ -f $1 ] ; then
+case $1 in
+*.tar.bz2)   tar xjf $1        ;;
+*.tar.gz)    tar xzf $1     ;;
+*.bz2)       bunzip2 $1       ;;
+*.rar)       rar x $1     ;;
+*.gz)        gunzip $1     ;;
+*.tar)       tar xf $1        ;;
+*.tbz2)      tar xjf $1      ;;
+*.tgz)       tar xzf $1       ;;
+*.zip)       unzip $1     ;;
+*.Z)         uncompress $1  ;;
+*.7z)        7z x $1    ;;
+*)           echo "'$1' cannot be extracted via extract()" ;;
+esac
+else
+echo "'$1' is not a valid file"
 fi
+}
+
+
+
+################################################################################
+## SEE KERNEL MODULES LOADED AND PARAMETERS
+function aa_mod_parameters () 
+{ 
+N=/dev/null;
+C=`tput op` O=$(echo -en "\n`tput setaf 2`>>> `tput op`");
+for mod in $(cat /proc/modules|cut -d" " -f1);
+do
+md=/sys/module/$mod/parameters;
+[[ ! -d $md ]] && continue;
+m=$mod;
+d=`modinfo -d $m 2>$N | tr "\n" "\t"`;
+echo -en "$O$m$C";
+[[ ${#d} -gt 0 ]] && echo -n " - $d";
+echo;
+for mc in $(cd $md; echo *);
+do
+de=`modinfo -p $mod 2>$N | grep ^$mc 2>$N|sed "s/^$mc=//" 2>$N`;
+echo -en "\t$mc=`cat $md/$mc 2>$N`";
+[[ ${#de} -gt 1 ]] && echo -en " - $de";
+echo;
+done;
+done
+}
+
+
+################################################################################
+## MORE KERNEL MODULES INFO WITH PARAMETERS AND COLOR
+function show_mod_parameter_info ()
+{
+if tty -s <&1
+then
+green="\e[1;32m"
+yellow="\e[1;33m"
+cyan="\e[1;36m"
+reset="\e[0m"
+else
+green=
+yellow=
+cyan=
+reset=
+fi
+newline="
+"
+
+while read mod
+do
+md=/sys/module/$mod/parameters
+[[ ! -d $md ]] && continue
+d="$(modinfo -d $mod 2>/dev/null | tr "\n" "\t")"
+echo -en "$green$mod$reset"
+[[ ${#d} -gt 0 ]] && echo -n " - $d"
+echo
+pnames=()
+pdescs=()
+pvals=()
+pdesc=
+add_desc=false
+while IFS="$newline" read p
+do
+if [[ $p =~ ^[[:space:]] ]]
+then
+pdesc+="$newline    $p"
+else
+$add_desc && pdescs+=("$pdesc")
+pname="${p%%:*}"
+pnames+=("$pname")
+pdesc=("    ${p#*:}")
+pvals+=("$(cat $md/$pname 2>/dev/null)")
+fi
+add_desc=true
+done < <(modinfo -p $mod 2>/dev/null)
+$add_desc && pdescs+=("$pdesc")
+for ((i=0; i<${#pnames[@]}; i++))
+do
+printf "  $cyan%s$reset = $yellow%s$reset\n%s\n" \
+${pnames[i]} \
+"${pvals[i]}" \
+"${pdescs[i]}"
+done
+echo
+
+done < <(cut -d' ' -f1 /proc/modules | sort)
+}
+
+
+################################################################################
+# SCREENFETCH
+#screenfetch
+
+
+
+
 
